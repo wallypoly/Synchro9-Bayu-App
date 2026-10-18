@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Synchro9 Bayu Blades - Squad Rapid Scoring Matrix (Printable A4 Landscape)</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      color: #111827;
+      background: #f3f4f6;
+      line-height: 1.25;
+      font-size: 9.5px;
+    }
+    .toolbar {
+      position: sticky;
+      top: 0;
+      background: #0a1e3f;
+      color: #fff;
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+      z-index: 100;
+    }
+    .toolbar h1 {
+      font-size: 14px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn-group {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+    .btn {
+      background: #d97706;
+      color: #fff;
+      border: none;
+      padding: 6px 14px;
+      font-size: 12px;
+      font-weight: 700;
+      border-radius: 6px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+    }
+    .btn:hover { background: #b45309; }
+    .btn-secondary { background: #374151; }
+    .btn-secondary:hover { background: #4b5563; }
+    .filter-select {
+      background: #1f2937;
+      color: #fff;
+      border: 1px solid #4b5563;
+      padding: 5px 10px;
+      font-size: 11px;
+      border-radius: 6px;
+    }
+
+    .sheet-wrapper {
+      max-width: 297mm;
+      margin: 15px auto;
+      background: #fff;
+      padding: 10mm 12mm;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      border-radius: 4px;
+    }
+
+    .sheet-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid #0a1e3f;
+      padding-bottom: 6px;
+      margin-bottom: 8px;
+    }
+    .sheet-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .sheet-logo {
+      width: 40px;
+      height: 40px;
+      object-fit: contain;
+    }
+    .brand-title {
+      font-size: 15px;
+      font-weight: 900;
+      color: #0a1e3f;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .brand-subtitle {
+      font-size: 9.5px;
+      font-weight: 700;
+      color: #d97706;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+    .doc-badge {
+      display: inline-block;
+      background: #0a1e3f;
+      color: #fff;
+      font-size: 8px;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 4px;
+      text-transform: uppercase;
+    }
+
+    .meta-bar {
+      display: grid;
+      grid-template-columns: 2fr 1.5fr 1.5fr 1.5fr 1.5fr;
+      gap: 8px;
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      padding: 6px 10px;
+      border-radius: 4px;
+      margin-bottom: 8px;
+      font-size: 9px;
+    }
+    .meta-item { display: flex; flex-direction: column; }
+    .meta-lbl { font-size: 7.5px; font-weight: 700; color: #6b7280; text-transform: uppercase; }
+    .meta-v { font-size: 10px; font-weight: 700; color: #111827; }
+
+    table.matrix-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 8.5px;
+    }
+    table.matrix-table th,
+    table.matrix-table td {
+      border: 1px solid #d1d5db;
+      padding: 3.5px 5px;
+      vertical-align: middle;
+    }
+    table.matrix-table th {
+      background: #f3f4f6;
+      color: #111827;
+      font-weight: 800;
+      font-size: 8px;
+      text-transform: uppercase;
+      text-align: center;
+    }
+    table.matrix-table tr:nth-child(even) td {
+      background: #f9fafb;
+    }
+
+    .col-num { width: 20px; text-align: center; font-weight: 700; color: #6b7280; }
+    .col-skater { width: 120px; font-weight: 700; color: #0a1e3f; text-align: left; }
+    .col-sq { width: 55px; text-align: center; }
+    .col-metric { width: 62px; text-align: center; font-size: 8px; }
+    .col-metric input {
+      width: 100%;
+      border: none;
+      background: transparent;
+      font-size: 8px;
+      font-weight: 700;
+      text-align: center;
+      color: #0a1e3f;
+    }
+    .col-fb { width: 140px; }
+
+    .squad-pill {
+      font-size: 7.5px;
+      font-weight: 800;
+      padding: 1px 4px;
+      border-radius: 3px;
+      text-transform: uppercase;
+    }
+    .squad-senior { background: #e0e7ff; color: #3730a3; }
+    .squad-junior { background: #fef3c7; color: #92400e; }
+    .squad-development { background: #dcfce7; color: #166534; }
+
+    .signoff-bar {
+      margin-top: 10px;
+      padding-top: 8px;
+      border-top: 2px solid #0a1e3f;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 8.5px;
+      page-break-inside: avoid;
+    }
+
+    @media print {
+      body { background: #fff; }
+      .toolbar { display: none !important; }
+      .sheet-wrapper {
+        margin: 0;
+        padding: 0;
+        box-shadow: none;
+        max-width: 100%;
+        border-radius: 0;
+      }
+      @page {
+        size: A4 landscape;
+        margin: 6mm 8mm;
+      }
+      table.matrix-table { page-break-inside: auto; }
+      table.matrix-table tr { page-break-inside: avoid; }
+      thead { display: table-header-group; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Screen Toolbar -->
+  <div class="toolbar">
+    <h1>
+      <span>📊</span> Synchro9 Bayu Blades — Squad Rapid Scoring Matrix (A4 Landscape)
+    </h1>
+    <div class="btn-group">
+      <select id="squadFilter" class="filter-select" onchange="filterSquad(this.value)">
+        <option value="all">All Squads (40 Skaters)</option>
+        <option value="senior">Senior Team Only</option>
+        <option value="junior">Junior Team Only</option>
+        <option value="development">Development Squad Only</option>
+      </select>
+      <button class="btn" onclick="window.print()">
+        🖨️ Print Matrix (A4 Landscape)
+      </button>
+      <a href="/" class="btn btn-secondary">
+        ← Back to Portal
+      </a>
+    </div>
+  </div>
+
+  <div class="sheet-wrapper">
+    <div class="sheet-header">
+      <div class="sheet-brand">
+        <img src="/bayu-blades-logo-v3.svg" alt="Bayu Blades" class="sheet-logo" onerror="this.src='/bayu-blades-logo-v3.png'" />
+        <div>
+          <div class="brand-title">Bayu Blades · Malaysia National Synchro9 Team</div>
+          <div class="brand-subtitle">On-Ice Station Rapid Scoring Matrix (A4 Landscape Clipboard Form)</div>
+        </div>
+      </div>
+      <div style="text-align: right;">
+        <span class="doc-badge">Coach Evaluation Grid</span>
+        <div style="font-size: 8px; color: #6b7280; margin-top: 2px;">Scale: 0.0 – 5.0 (0.5 steps) | N/O: Not Observed</div>
+      </div>
+    </div>
+
+    <div class="meta-bar">
+      <div class="meta-item">
+        <span class="meta-lbl">Session & Focus Station</span>
+        <span class="meta-v">MYNISS 4-Station On-Ice Rotation</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-lbl">Date & Time</span>
+        <span class="meta-v">2026-10-18 · 06:45 – 08:45 AM</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-lbl">Training Context</span>
+        <span class="meta-v">[ ] Off-Ice  [x] On-Ice  [ ] Combined</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-lbl">Evaluating Coach</span>
+        <span class="meta-v">Coach Shazfinas / Coach Michelle</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-lbl">Session Lead</span>
+        <span class="meta-v">Coach Cheng Wei (Admin)</span>
+      </div>
+    </div>
+
+    <table class="matrix-table">
+      <thead>
+        <tr>
+          <th class="col-num">#</th>
+          <th class="col-skater">Skater Full Name</th>
+          <th class="col-sq">Squad</th>
+          <th class="col-metric">1. Edge Quality<br/><span style="font-size:7px; color:#6b7280;">(用刃质量)</span></th>
+          <th class="col-metric">2. Flow & Glide<br/><span style="font-size:7px; color:#6b7280;">(滑行流畅度)</span></th>
+          <th class="col-metric">3. Alignment<br/><span style="font-size:7px; color:#6b7280;">(身体对齐)</span></th>
+          <th class="col-metric">4. Spacing<br/><span style="font-size:7px; color:#6b7280;">(间距控制)</span></th>
+          <th class="col-metric">5. Uniformity<br/><span style="font-size:7px; color:#6b7280;">(动作一致性)</span></th>
+          <th class="col-metric">6. Rhythm<br/><span style="font-size:7px; color:#6b7280;">(节拍准确)</span></th>
+          <th class="col-metric">7. Precision<br/><span style="font-size:7px; color:#6b7280;">(队形准确)</span></th>
+          <th class="col-metric">8. Punctuality<br/><span style="font-size:7px; color:#6b7280;">(训练准备)</span></th>
+          <th class="col-fb">Strengths & Immediate Technical Correction</th>
+        </tr>
+      </thead>
+      <tbody id="matrixTbody">
+      </tbody>
+    </table>
+
+    <div class="signoff-bar">
+      <div>Evaluating Coach Signature: ___________________________ Date: ______________</div>
+      <div>Session Lead Verification: ___________________________ Date: ______________</div>
+      <div>Admin Approval (Coach Cheng Wei): ___________________________ Date: ______________</div>
+    </div>
+  </div>
+
+  <script>
+    const SKATERS = [
+      { no: 1, name: "Gabriella Low", nick: "Gabby", squad: "junior" },
+      { no: 2, name: "Shazila Adina", nick: "Adina", squad: "junior" },
+      { no: 3, name: "Pang Poh Yee", nick: "Poh Yee", squad: "senior" },
+      { no: 4, name: "Nur Damiya", nick: "Damiya", squad: "junior" },
+      { no: 5, name: "Giovanna Low", nick: "Gigi", squad: "junior" },
+      { no: 6, name: "Koh Zhi Ning", nick: "Zhi Ning", squad: "junior" },
+      { no: 7, name: "Melanie Lea", nick: "Melanie", squad: "senior" },
+      { no: 8, name: "Hor Zhi Xuan", nick: "Zhi Xuan", squad: "junior" },
+      { no: 9, name: "Salaree Canning", nick: "Salaree", squad: "senior" },
+      { no: 10, name: "Mila Isabel", nick: "Mila", squad: "junior" },
+      { no: 11, name: "Chan Ming Xing", nick: "Ming Xing", squad: "senior" },
+      { no: 12, name: "Hayley Cece Wong", nick: "Hayley", squad: "junior" },
+      { no: 13, name: "Jenelle Sia", nick: "Jenelle", squad: "junior" },
+      { no: 14, name: "Loh Zi Qi", nick: "Zi Qi", squad: "senior" },
+      { no: 15, name: "Darin Azra", nick: "Darin", squad: "junior" },
+      { no: 16, name: "Apryl Low", nick: "Apryl", squad: "junior" },
+      { no: 17, name: "Isabelle Zara", nick: "Isabelle", squad: "junior" },
+      { no: 18, name: "Olievia Ng", nick: "Olievia", squad: "senior" },
+      { no: 19, name: "Wong Mai", nick: "Mai", squad: "junior" },
+      { no: 20, name: "Ally Chye", nick: "Ally", squad: "senior" },
+      { no: 21, name: "Haruhi", nick: "Haruhi", squad: "development" },
+      { no: 22, name: "Hermione", nick: "Hermione", squad: "junior" },
+      { no: 23, name: "Audrey Afiqah", nick: "Audrey", squad: "junior" },
+      { no: 24, name: "Ng Zhang En", nick: "Zhang En", squad: "senior" },
+      { no: 25, name: "Maria", nick: "Maria", squad: "development" },
+      { no: 26, name: "Farah Deanna", nick: "Farah", squad: "senior" },
+      { no: 27, name: "Daphne Chu", nick: "Daphne", squad: "junior" },
+      { no: 28, name: "Ng Zhang Hui", nick: "Zhang Hui", squad: "senior" },
+      { no: 29, name: "Bridget", nick: "Bridget", squad: "development" },
+      { no: 30, name: "Nur Sabrina", nick: "Sabrina", squad: "senior" },
+      { no: 31, name: "Sow Xyn Er", nick: "Xyn Er", squad: "junior" },
+      { no: 32, name: "Suffiyah Qistina", nick: "Suffiyah", squad: "development" },
+      { no: 33, name: "Phyllis", nick: "Phyllis", squad: "development" },
+      { no: 34, name: "Dayana", nick: "Dayana", squad: "development" },
+      { no: 35, name: "Sow Xyn Chen", nick: "Xyn Chen", squad: "junior" },
+      { no: 36, name: "Lim Shi Xuan", nick: "Shi Xuan", squad: "development" },
+      { no: 37, name: "Sangeeta", nick: "Sangeeta", squad: "junior" },
+      { no: 38, name: "Afrina", nick: "Afrina", squad: "senior" },
+      { no: 39, name: "Nasya Annisa", nick: "Nasya", squad: "junior" },
+      { no: 40, name: "Asha Amilan", nick: "Asha", squad: "senior" }
+    ];
+
+    function renderMatrix(filter) {
+      const tbody = document.getElementById('matrixTbody');
+      tbody.innerHTML = '';
+      const filtered = SKATERS.filter(s => filter === 'all' || s.squad === filter);
+
+      filtered.forEach(s => {
+        const tr = document.createElement('tr');
+        const squadClass = s.squad === 'senior' ? 'squad-senior' : s.squad === 'junior' ? 'squad-junior' : 'squad-development';
+        tr.innerHTML = `
+          <td class="col-num">${s.no}</td>
+          <td class="col-skater">${s.name} <span style="font-weight:normal; color:#6b7280;">(${s.nick})</span></td>
+          <td class="col-sq"><span class="squad-pill ${squadClass}">${s.squad}</span></td>
+          <td class="col-metric"></td>
+          <td class="col-metric"></td>
+          <td class="col-metric"></td>
+          <td class="col-metric"></td>
+          <td class="col-metric"></td>
+          <td class="col-metric"></td>
+          <td class="col-metric"></td>
+          <td class="col-metric"></td>
+          <td class="col-fb"></td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function filterSquad(val) {
+      renderMatrix(val);
+    }
+
+    renderMatrix('all');
+  </script>
+</body>
+</html>

@@ -93,30 +93,101 @@ export const ExportDataModal: React.FC<ExportDataModalProps> = ({ sessions, skat
         </div>
       )}
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
-        <button
-          onClick={handleExportAttendance}
-          disabled={exporting}
-          className="p-4 rounded-xl border border-blue-200 bg-blue-50/60 hover:bg-blue-100/80 transition flex items-center justify-between text-left group"
-        >
-          <div>
-            <span className="text-xs font-black text-blue-950 block">Attendance Log CSV</span>
-            <span className="text-[11px] text-blue-700">Check-in, verified status & reasons</span>
-          </div>
-          <Download className="w-4 h-4 text-blue-800 group-hover:translate-y-0.5 transition-transform" />
-        </button>
+      {/* CSV Digital Exports */}
+      <div>
+        <h3 className="text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+          Digital Records (CSV / Excel):
+        </h3>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <button
+            onClick={handleExportAttendance}
+            disabled={exporting}
+            className="p-4 rounded-xl border border-blue-200 bg-blue-50/60 hover:bg-blue-100/80 transition flex items-center justify-between text-left group"
+          >
+            <div>
+              <span className="text-xs font-black text-blue-950 block">Attendance Log CSV</span>
+              <span className="text-[11px] text-blue-700">Check-in, verified status & reasons</span>
+            </div>
+            <Download className="w-4 h-4 text-blue-800 group-hover:translate-y-0.5 transition-transform" />
+          </button>
 
-        <button
-          onClick={handleExportAssessment}
-          disabled={exporting}
-          className="p-4 rounded-xl border border-emerald-200 bg-emerald-50/60 hover:bg-emerald-100/80 transition flex items-center justify-between text-left group"
-        >
-          <div>
-            <span className="text-xs font-black text-emerald-950 block">36-Metric Assessment CSV</span>
-            <span className="text-[11px] text-emerald-700">8 Categories, scores & notes</span>
-          </div>
-          <Download className="w-4 h-4 text-emerald-800 group-hover:translate-y-0.5 transition-transform" />
-        </button>
+          <button
+            onClick={handleExportAssessment}
+            disabled={exporting}
+            className="p-4 rounded-xl border border-emerald-200 bg-emerald-50/60 hover:bg-emerald-100/80 transition flex items-center justify-between text-left group"
+          >
+            <div>
+              <span className="text-xs font-black text-emerald-950 block">36-Metric Assessment CSV</span>
+              <span className="text-[11px] text-emerald-700">8 Categories, scores & notes</span>
+            </div>
+            <Download className="w-4 h-4 text-emerald-800 group-hover:translate-y-0.5 transition-transform" />
+          </button>
+        </div>
+      </div>
+
+      {/* Physical Paper Backup Sheets (A4 Printable) */}
+      <div className="pt-2 border-t border-slate-200">
+        <div className="flex items-center justify-between mb-2">
+          <h3 className="text-xs font-bold text-amber-900 uppercase tracking-wider">
+            🖨️ Physical Paper Backup Sheets (A4 Printable):
+          </h3>
+          <span className="text-[10px] font-bold text-amber-700 bg-amber-100 px-2 py-0.5 rounded-full">
+            Ice-Side Fallback
+          </span>
+        </div>
+        <p className="text-xs text-slate-500 mb-3">
+          Print physical clipboard worksheets in case of rink Wi-Fi outage, dead device batteries, or official paper signing.
+        </p>
+
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <a
+            href={`/print/attendance-sheet.html?sessionId=${currentSession?.id || ''}&date=${encodeURIComponent(currentSession?.date || '')}&title=${encodeURIComponent(currentSession?.title || '')}&lead=${encodeURIComponent(currentSession?.leadCoachName || '')}&venue=${encodeURIComponent(currentSession?.location || '')}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="p-3.5 rounded-xl border border-amber-300 bg-amber-50/70 hover:bg-amber-100 transition flex flex-col justify-between text-left group"
+          >
+            <div>
+              <span className="text-xs font-black text-amber-950 block">Attendance Roster</span>
+              <span className="text-[10px] text-amber-800 mt-1 block">40 Skaters A4 Portrait</span>
+            </div>
+            <div className="mt-3 flex items-center justify-between text-[11px] font-bold text-amber-900">
+              <span>Open & Print</span>
+              <span>↗</span>
+            </div>
+          </a>
+
+          <a
+            href={`/print/assessment-sheet.html?date=${encodeURIComponent(currentSession?.date || '')}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="p-3.5 rounded-xl border border-blue-300 bg-blue-50/70 hover:bg-blue-100 transition flex flex-col justify-between text-left group"
+          >
+            <div>
+              <span className="text-xs font-black text-blue-950 block">36-Metric Rubric</span>
+              <span className="text-[10px] text-blue-800 mt-1 block">8 Categories 2-Page A4</span>
+            </div>
+            <div className="mt-3 flex items-center justify-between text-[11px] font-bold text-blue-900">
+              <span>Open & Print</span>
+              <span>↗</span>
+            </div>
+          </a>
+
+          <a
+            href="/print/squad-matrix.html"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="p-3.5 rounded-xl border border-purple-300 bg-purple-50/70 hover:bg-purple-100 transition flex flex-col justify-between text-left group"
+          >
+            <div>
+              <span className="text-xs font-black text-purple-950 block">Squad Rapid Matrix</span>
+              <span className="text-[10px] text-purple-800 mt-1 block">Landscape Station Grid</span>
+            </div>
+            <div className="mt-3 flex items-center justify-between text-[11px] font-bold text-purple-900">
+              <span>Open & Print</span>
+              <span>↗</span>
+            </div>
+          </a>
+        </div>
       </div>
 
       {statusMsg && (

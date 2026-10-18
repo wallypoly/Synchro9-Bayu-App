@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Synchro9 Bayu Blades - 36-Metric Assessment Sheet (Printable A4)</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      color: #111827;
+      background: #f3f4f6;
+      line-height: 1.25;
+      font-size: 10px;
+    }
+    .toolbar {
+      position: sticky;
+      top: 0;
+      background: #0a1e3f;
+      color: #fff;
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+      z-index: 100;
+    }
+    .toolbar h1 {
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn-group {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+    .btn {
+      background: #d97706;
+      color: #fff;
+      border: none;
+      padding: 6px 14px;
+      font-size: 12px;
+      font-weight: 700;
+      border-radius: 6px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.15s ease;
+      text-decoration: none;
+    }
+    .btn:hover {
+      background: #b45309;
+    }
+    .btn-secondary {
+      background: #374151;
+    }
+    .btn-secondary:hover {
+      background: #4b5563;
+    }
+    .skater-select {
+      background: #1f2937;
+      color: #fff;
+      border: 1px solid #4b5563;
+      padding: 5px 10px;
+      font-size: 11px;
+      border-radius: 6px;
+    }
+
+    /* Print Paper Container */
+    .sheet-wrapper {
+      max-width: 210mm;
+      margin: 20px auto;
+      background: #fff;
+      padding: 10mm 14mm;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      border-radius: 4px;
+    }
+
+    .page-break {
+      page-break-before: always;
+      padding-top: 10px;
+      margin-top: 20px;
+      border-top: 1px dashed #d1d5db;
+    }
+
+    /* Header */
+    .sheet-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid #0a1e3f;
+      padding-bottom: 6px;
+      margin-bottom: 8px;
+    }
+    .sheet-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .sheet-logo {
+      width: 44px;
+      height: 44px;
+      object-fit: contain;
+    }
+    .brand-title {
+      font-size: 15px;
+      font-weight: 900;
+      color: #0a1e3f;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .brand-subtitle {
+      font-size: 9.5px;
+      font-weight: 700;
+      color: #d97706;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+    .doc-badge {
+      display: inline-block;
+      background: #0a1e3f;
+      color: #fff;
+      font-size: 8.5px;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 4px;
+      text-transform: uppercase;
+    }
+
+    /* Metadata Block */
+    .meta-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1.5fr 1.5fr;
+      gap: 6px;
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      padding: 6px 10px;
+      border-radius: 6px;
+      margin-bottom: 8px;
+      font-size: 9.5px;
+    }
+    .meta-item {
+      display: flex;
+      flex-direction: column;
+    }
+    .meta-label {
+      font-size: 8px;
+      font-weight: 700;
+      color: #6b7280;
+      text-transform: uppercase;
+    }
+    .meta-val {
+      font-size: 10.5px;
+      font-weight: 700;
+      color: #111827;
+      margin-top: 1px;
+    }
+
+    /* Context & Scale Bar */
+    .context-scale-bar {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    .context-box, .scale-box {
+      border: 1px solid #e5e7eb;
+      padding: 5px 8px;
+      border-radius: 4px;
+      background: #fff;
+      font-size: 8.5px;
+    }
+    .box-title {
+      font-weight: 800;
+      color: #0a1e3f;
+      text-transform: uppercase;
+      font-size: 8px;
+      margin-bottom: 3px;
+    }
+    .context-options {
+      display: flex;
+      gap: 12px;
+      font-weight: 600;
+    }
+    .context-options label {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+    }
+    .checkbox-sq {
+      width: 10px;
+      height: 10px;
+      border: 1px solid #374151;
+      display: inline-block;
+      border-radius: 2px;
+    }
+    .scale-guide {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px 10px;
+      color: #4b5563;
+    }
+    .scale-guide span strong {
+      color: #0a1e3f;
+    }
+
+    /* Category Block */
+    .category-card {
+      border: 1px solid #d1d5db;
+      border-radius: 4px;
+      margin-bottom: 8px;
+      overflow: hidden;
+      page-break-inside: avoid;
+    }
+    .category-header {
+      background: #0a1e3f;
+      color: #fff;
+      padding: 4px 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .cat-title {
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+    .cat-title-zh {
+      font-size: 9px;
+      color: #fde68a;
+      margin-left: 6px;
+      font-weight: 600;
+    }
+    .cat-avg-box {
+      font-size: 8.5px;
+      font-weight: 700;
+      background: #1e3a8a;
+      padding: 2px 6px;
+      border-radius: 3px;
+    }
+
+    /* Sub-indicator Table */
+    table.indicator-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 9px;
+    }
+    table.indicator-table th,
+    table.indicator-table td {
+      border-bottom: 1px solid #e5e7eb;
+      padding: 3px 6px;
+      vertical-align: middle;
+    }
+    table.indicator-table th {
+      background: #f3f4f6;
+      color: #4b5563;
+      font-size: 8px;
+      text-transform: uppercase;
+      font-weight: 700;
+      text-align: left;
+    }
+    table.indicator-table tr:last-child td {
+      border-bottom: none;
+    }
+    .col-ind-name { width: 140px; font-weight: 700; color: #111827; }
+    .col-ind-desc { font-size: 8px; color: #6b7280; }
+    .col-ind-scores { width: 220px; text-align: center; }
+    .col-ind-notes { width: 110px; }
+
+    /* Score step bubbles */
+    .score-bubbles {
+      display: flex;
+      gap: 2px;
+      justify-content: center;
+      align-items: center;
+    }
+    .bubble {
+      width: 15px;
+      height: 15px;
+      border: 1px solid #9ca3af;
+      border-radius: 50%;
+      font-size: 7.5px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: #374151;
+      font-weight: 600;
+    }
+    .bubble-no {
+      width: 18px;
+      height: 15px;
+      border-radius: 3px;
+      border: 1px dashed #6b7280;
+      font-size: 7.5px;
+      font-weight: 800;
+      color: #6b7280;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-left: 3px;
+    }
+
+    /* Qualitative Feedback Block */
+    .feedback-section {
+      border: 1px solid #d1d5db;
+      border-radius: 4px;
+      padding: 8px;
+      background: #fafafa;
+      margin-top: 8px;
+      margin-bottom: 8px;
+      page-break-inside: avoid;
+    }
+    .feedback-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 8px;
+    }
+    .fb-col {
+      display: flex;
+      flex-direction: column;
+    }
+    .fb-title {
+      font-size: 8.5px;
+      font-weight: 800;
+      color: #0a1e3f;
+      text-transform: uppercase;
+      margin-bottom: 2px;
+    }
+    .fb-lines {
+      border: 1px solid #e5e7eb;
+      background: #fff;
+      height: 48px;
+      border-radius: 3px;
+      padding: 4px;
+      font-size: 8.5px;
+    }
+
+    /* Signatures Section */
+    .signoff-section {
+      margin-top: 8px;
+      padding-top: 8px;
+      border-top: 2px solid #0a1e3f;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 15px;
+      font-size: 8.5px;
+      page-break-inside: avoid;
+    }
+    .signoff-box {
+      border: 1px solid #e5e7eb;
+      padding: 6px 10px;
+      border-radius: 4px;
+      background: #fafafa;
+    }
+    .signoff-role {
+      font-weight: 800;
+      font-size: 9px;
+      color: #0a1e3f;
+      text-transform: uppercase;
+      margin-bottom: 2px;
+    }
+    .signature-line {
+      border-bottom: 1px solid #374151;
+      margin-top: 18px;
+      margin-bottom: 4px;
+    }
+
+    @media print {
+      body {
+        background: #fff;
+        font-size: 8.5pt;
+      }
+      .toolbar {
+        display: none !important;
+      }
+      .sheet-wrapper {
+        margin: 0;
+        padding: 0;
+        box-shadow: none;
+        max-width: 100%;
+        border-radius: 0;
+      }
+      @page {
+        size: A4 portrait;
+        margin: 7mm 10mm;
+      }
+      .page-break {
+        page-break-before: always;
+        border-top: none;
+        margin-top: 0;
+        padding-top: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Screen Toolbar -->
+  <div class="toolbar">
+    <h1>
+      <span>📋</span> Synchro9 Bayu Blades — 36-Metric Assessment Paper Worksheet
+    </h1>
+    <div class="btn-group">
+      <label style="font-size: 11px; font-weight: 600;">Skater Name:</label>
+      <select id="skaterSelector" class="skater-select" onchange="updateSkater(this.value)">
+        <option value="">-- Blank Sheet (For Any Skater) --</option>
+      </select>
+      <button class="btn" onclick="window.print()">
+        🖨️ Print Sheet (A4)
+      </button>
+      <a href="/" class="btn btn-secondary">
+        ← Back to Portal
+      </a>
+    </div>
+  </div>
+
+  <div class="sheet-wrapper">
+    <!-- PAGE 1: Header + Categories 1 to 4 -->
+    <div class="sheet-header">
+      <div class="sheet-brand">
+        <img src="/bayu-blades-logo-v3.svg" alt="Bayu Blades" class="sheet-logo" onerror="this.src='/bayu-blades-logo-v3.png'" />
+        <div>
+          <div class="brand-title">Bayu Blades · Malaysia National Synchro9 Team</div>
+          <div class="brand-subtitle">36-Metric Assessment System — Working Template v1.0 (Page 1/2)</div>
+        </div>
+      </div>
+      <div style="text-align: right;">
+        <span class="doc-badge">Field Evaluation Form</span>
+        <div style="font-size: 8px; color: #6b7280; margin-top: 2px;">Confidential Athlete Record</div>
+      </div>
+    </div>
+
+    <!-- Metadata Grid -->
+    <div class="meta-grid">
+      <div class="meta-item">
+        <span class="meta-label">Athlete Full Name</span>
+        <span class="meta-val" id="skaterNameDisplay">___________________________________</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Squad</span>
+        <span class="meta-val" id="skaterSquadDisplay">[ ] Senior  [ ] Junior  [ ] Dev</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Evaluating Coach</span>
+        <span class="meta-val" id="coachDisplay">Coach Shazfinas / Coach Michelle</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Date & Session</span>
+        <span class="meta-val" id="dateDisplay">2026-10-18 · MYNISS Ice Rink</span>
+      </div>
+    </div>
+
+    <!-- Context & Scale Bar -->
+    <div class="context-scale-bar">
+      <div class="context-box">
+        <div class="box-title">Observation Context (Select one)</div>
+        <div class="context-options">
+          <label><span class="checkbox-sq"></span> Off-Ice</label>
+          <label><span class="checkbox-sq"></span> On-Ice</label>
+          <label><span class="checkbox-sq"></span> Combined</label>
+        </div>
+      </div>
+      <div class="scale-box">
+        <div class="box-title">Scoring Reference Scale (0.0 – 5.0 in 0.5 steps)</div>
+        <div class="scale-guide">
+          <span><strong>5.0</strong> Excellent</span>
+          <span><strong>4.0</strong> Good</span>
+          <span><strong>3.0</strong> Satisfactory</span>
+          <span><strong>2.0</strong> Developing</span>
+          <span><strong>1.0</strong> Needs Imp.</span>
+          <span><strong>0.0</strong> Explicit Zero</span>
+          <span><strong>N/O</strong> Not Observed</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- CATEGORY 1: Skating Skills -->
+    <div class="category-card">
+      <div class="category-header">
+        <div>
+          <span class="cat-title">1. Skating Skills</span>
+          <span class="cat-title-zh">滑行技巧</span>
+        </div>
+        <div class="cat-avg-box">Category Mean: [ ______ / 5.0 ] (Observed: ___ / 5)</div>
+      </div>
+      <table class="indicator-table">
+        <thead>
+          <tr>
+            <th class="col-ind-name">Sub-Indicator</th>
+            <th>Observed Benchmark & Definition</th>
+            <th class="col-ind-scores">Score (0.0 - 5.0, 0.5 steps)</th>
+            <th class="col-ind-notes">Coach Specific Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="col-ind-name">Edge Quality (用刃质量)</td>
+            <td class="col-ind-desc">Deep, clean edges with minimal scraping, continuous power generation.</td>
+            <td class="col-ind-scores"><div class="score-bubbles" data-step></div></td>
+            <td class="col-ind-notes"></td>
+          </tr>
+          <tr>
+            <td class="col-ind-name">Flow & Glide (滑行流畅度)</td>
+            <td class="col-ind-desc">Continuous forward and backward propulsion; sustained speed through lobes.</td>
+            <td class="col-ind-scores"><div class="score-bubbles" data-step></div></td>
+            <td class="col-ind-notes"></td>
+          </tr>
+          <tr>
+            <td class="col-ind-name">Steps & Turns (步法与转步)</td>
+            <td class="col-ind-desc">Twizzles, brackets, rockers, counters precision and turn depth.</td>
+            <td class="col-ind-scores"><div class="score-bubbles" data-step></div></td>
+            <td class="col-ind-notes"></td>
+          </tr>
+          <tr>
+            <td class="col-ind-name">Power & Speed (力量与速度)</td>
+            <td class="col-ind-desc">Explosive acceleration and power generation from blade push.</td>
+            <td class="col-ind-scores"><div class="score-bubbles" data-step></div></td>
+            <td class="col-ind-notes"></td>
+          </tr>
+          <tr>
+            <td class="col-ind-name">Multi-directional Control (多方向控制)</td>
+            <td class="col-ind-desc">Effortless switching between directions and lobes under team pressure.</td>
+            <td class="col-ind-scores"><div class="score-bubbles" data-step></div></td>
+            <td class="col-ind-notes"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- CATEGORY 2: Posture & Body Control -->
+    <div class="category-card">
+      <div class="category-header">
+        <div>
+          <span class="cat-title">2. Posture & Body Control</span>
+          <span class="cat-title-zh">姿态与身体控制</span>
+        </div>
+        <div class="cat-avg-box">Category Mean: [ ______ / 5.0 ] (Observed: ___ / 4)</div>
+      </div>
+      <table class="indicator-table">
+        <tbody>
+          <tr>
+            <td class="col-ind-name">Body Alignment (身体对齐)</td>
+            <td class="col-ind-desc">Head, spine, pelvis and blade vertical alignment during motion.</td>
+            <td class="col-ind-scores"><div class="score-bubbles" data-step></div></td>
+            <td class="col-ind-notes"></td>
+          </tr>
+          <tr>
+            <td class="col-ind-name">Knee & Ankle Action (膝踝配合)</td>
+            <td class="col-ind-desc">Elastic spring and deep compression; shock absorption across changes.</td>
+            <td class="col-ind-scores"><div class="score-bubbles" data-step></div></td>
+            <td class="col-ind-notes"></td>
+          </tr>
+          <tr>
+            <td class="col-ind-name">Core Stability (核心稳定)</td>
+            <td class="col-ind-desc">Torso firmness during motion, holds and team deceleration.</td>
+            <td class="col-ind-scores"><div class="score-bubbles" data-step></div></td>
+            <td class="col-ind-notes"></td>
+          </tr>
+          <tr>
+            <td class="col-ind-name">Upper Body Carriage (上半身控制)</td>
+            <td class="col-ind-desc">Still shoulders, expressive arms independent of lower body blade action.</td>
+            <td class="col-ind-scores"><div class="score-bubbles" data-step></div></td>
+            <td class="col-ind-notes"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- CATEGORY 3: Balance & Flexibility -->
+    <div class="category-card">
+      <div class="category-header">
+        <div>
+          <span class="cat-title">3. Balance & Flexibility</span>
+          <span class="cat-title-zh">平衡与柔韧性</span>
+        </div>
+        <div class="cat-avg-box">Category Mean: [ ______ / 5.0 ] (Observed: ___ / 4)</div>
+      </div>
+      <table class="indicator-table">
+        <tbody>
+          <tr>
+            <td class="col-ind-name">One-foot Balance (单脚平衡)</td>
+            <td class="col-ind-desc">Centering over single skating blade without wobble or ankle collapse.</td>
+            <td class="col-ind-scores"><div class="score-bubbles" data-step></div></td>
+            <td class="col-ind-notes"></td>
+          </tr>
+          <tr>
+            <td class="col-ind-name">Dynamic Stability (动态稳定)</td>
+            <td class="col-ind-desc">Balance maintained through complex multi-body transitions.</td>
+            <td class="col-ind-scores"><div class="score-bubbles" data-step></div></td>
+            <td class="col-ind-notes"></td>
+          </tr>
+          <tr>
+            <td class="col-ind-name">Functional Mobility (功能性活动度)</td>
+            <td class="col-ind-desc">Active range of motion in hips, shoulders and spine.</td>
+            <td class="col-ind-scores"><div class="score-bubbles" data-step></div></td>
+            <td class="col-ind-notes"></td>
+          </tr>
+          <tr>
+            <td class="col-ind-name">Extension & Line Control (延伸控制)</td>
+            <td class="col-ind-desc">Pointed toes, clean limb lines and aesthetic positions in flight.</td>
+            <td class="col-ind-scores"><div class="score-bubbles" data-step></div></td>
+            <td class="col-ind-notes"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- CATEGORY 4: Timing & Musicality -->
+    <div class="category-card">
+      <div class="category-header">
+        <div>
+          <span class="cat-title">4. Timing & Musicality</span>
+          <span class="cat-title-zh">节奏与乐感</span>
+        </div>
+        <div class="cat-avg-box">Category Mean: [ ______ / 5.0 ] (Observed: ___ / 5)</div>
+      </div>
+      <table class="indicator-table">
+        <tbody>
+          <tr>
+            <td class="col-ind-name">Beat Accuracy (节拍准确度)</td>
+            <td class="col-ind-desc">On-beat blade strikes and team rhythmic synchronization.</td>
+            <td class="col-ind-scores"><div class="score-bubbles" data-step></div></td>
+            <td class="col-ind-notes"></td>
+          </tr>
+          <tr>
+            <td class="col-ind-name">Start & Stop Timing (起止时机)</td>
+            <td class="col-ind-desc">Sharp, unanimous initiations and cut-offs with music.</td>
+            <td class="col-ind-scores"><div class="score-bubbles" data-step></div></td>
+            <td class="col-ind-notes"></td>
+          </tr>
+          <tr>
+            <td class="col-ind-name">Musical Phrasing (音乐乐句)</td>
+            <td class="col-ind-desc">Sensing musical phrasing, breathing, and climax structure.</td>
+            <td class="col-ind-scores"><div class="score-bubbles" data-step></div></td>
+            <td class="col-ind-notes"></td>
+          </tr>
+          <tr>
+            <td class="col-ind-name">Tempo Adaptation (速度适应)</td>
+            <td class="col-ind-desc">Smooth handling of accelerando and ritardando passages.</td>
+            <td class="col-ind-scores"><div class="score-bubbles" data-step></div></td>
+            <td class="col-ind-notes"></td>
+          </tr>
+          <tr>
+            <td class="col-ind-name">Dynamics & Expression (表现力)</td>
+            <td class="col-ind-desc">Contrast between soft lyrical flow and crisp staccato accents.</td>
+            <td class="col-ind-scores"><div class="score-bubbles" data-step></div></td>
+            <td class="col-ind-notes"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- PAGE BREAK -->
+    <div class="page-break"></div>
+
+    <!-- PAGE 2: Header + Categories 5 to 8 + Qualitative Notes + Signatures -->
+    <div class="sheet-header">
+      <div class="sheet-brand">
+        <img src="/bayu-blades-logo-v3.svg" alt="Bayu Blades" class="sheet-logo" onerror="this.src='/bayu-blades-logo-v3.png'" />
+        <div>
+          <div class="brand-title">Bayu Blades · Malaysia National Synchro9 Team</div>
+          <div class="brand-subtitle">36-Metric Assessment System — Working Template v1.0 (Page 2/2)</div>
+        </div>
+      </div>
+      <div style="text-align: right;">
+        <span class="doc-badge">Athlete: <span id="skaterNamePage2">____________________</span></span>
+      </div>
+    </div>
+
+    <!-- CATEGORY 5: Teamwork & Synchronization -->
+    <div class="category-card">
+      <div class="category-header">
+        <div>
+          <span class="cat-title">5. Teamwork & Synchronization</span>
+          <span class="cat-title-zh">团队配合与同步</span>
+        </div>
+        <div class="cat-avg-box">Category Mean: [ ______ / 5.0 ] (Observed: ___ / 5)</div>
+      </div>
+      <table class="indicator-table">
+        <tbody>
+          <tr>
+            <td class="col-ind-name">Spacing Control (间距控制)</td>
+            <td class="col-ind-desc">Uniform distance between adjacent skaters throughout curves.</td>
+            <td class="col-ind-scores"><div class="score-bubbles" data-step></div></td>
+            <td class="col-ind-notes"></td>
+          </tr>
+          <tr>
+            <td class="col-ind-name">Movement Uniformity (动作一致性)</td>
+            <td class="col-ind-desc">Identical blade angles, free leg heights, and turn velocity.</td>
+            <td class="col-ind-scores"><div class="score-bubbles" data-step></div></td>
+            <td class="col-ind-notes"></td>
+          </tr>
+          <tr>
+            <td class="col-ind-name">Matching Speed (速度配合)</td>
+            <td class="col-ind-desc">Synchronized glide speed across all skaters without lagging.</td>
+            <td class="col-ind-scores"><div class="score-bubbles" data-step></div></td>
+            <td class="col-ind-notes"></td>
+          </tr>
+          <tr>
+            <td class="col-ind-name">Holds & Connections (握持与连接)</td>
+            <td class="col-ind-desc">Shoulder, hand-to-hand, and wrist grip firmness without dragging.</td>
+            <td class="col-ind-scores"><div class="score-bubbles" data-step></div></td>
+            <td class="col-ind-notes"></td>
+          </tr>
+          <tr>
+            <td class="col-ind-name">Team Awareness & Recovery (恢复)</td>
+            <td class="col-ind-desc">Peripheral vision and rapid subtle adjustment if spacing shifts.</td>
+            <td class="col-ind-scores"><div class="score-bubbles" data-step></div></td>
+            <td class="col-ind-notes"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- CATEGORY 6: Formation & Transitions -->
+    <div class="category-card">
+      <div class="category-header">
+        <div>
+          <span class="cat-title">6. Formation & Transitions</span>
+          <span class="cat-title-zh">队形与转换</span>
+        </div>
+        <div class="cat-avg-box">Category Mean: [ ______ / 5.0 ] (Observed: ___ / 5)</div>
+      </div>
+      <table class="indicator-table">
+        <tbody>
+          <tr>
+            <td class="col-ind-name">Formation Precision (队形准确度)</td>
+            <td class="col-ind-desc">Straight lines, concentric circles, crisp blocks and wheels.</td>
+            <td class="col-ind-scores"><div class="score-bubbles" data-step></div></td>
+            <td class="col-ind-notes"></td>
+          </tr>
+          <tr>
+            <td class="col-ind-name">Travel & Tracking (移动路线)</td>
+            <td class="col-ind-desc">Maintaining team geometry across designated ice paths.</td>
+            <td class="col-ind-scores"><div class="score-bubbles" data-step></div></td>
+            <td class="col-ind-notes"></td>
+          </tr>
+          <tr>
+            <td class="col-ind-name">Transition Timing (转换时机)</td>
+            <td class="col-ind-desc">Seamless shifts from one formation to another without hesitation.</td>
+            <td class="col-ind-scores"><div class="score-bubbles" data-step></div></td>
+            <td class="col-ind-notes"></td>
+          </tr>
+          <tr>
+            <td class="col-ind-name">Ice Coverage (冰面覆盖)</td>
+            <td class="col-ind-desc">Full utilization of rink space and arena corner lobes.</td>
+            <td class="col-ind-scores"><div class="score-bubbles" data-step></div></td>
+            <td class="col-ind-notes"></td>
+          </tr>
+          <tr>
+            <td class="col-ind-name">FTM / DF Readiness (FTM/DF准备度)</td>
+            <td class="col-ind-desc">Free Skating Moves & Difficult Formations (Pending ISAM verification).</td>
+            <td class="col-ind-scores"><div class="score-bubbles" data-step></div></td>
+            <td class="col-ind-notes"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- CATEGORY 7: Strength & Endurance -->
+    <div class="category-card">
+      <div class="category-header">
+        <div>
+          <span class="cat-title">7. Strength & Endurance</span>
+          <span class="cat-title-zh">力量与耐力</span>
+        </div>
+        <div class="cat-avg-box">Category Mean: [ ______ / 5.0 ] (Observed: ___ / 4)</div>
+      </div>
+      <table class="indicator-table">
+        <tbody>
+          <tr>
+            <td class="col-ind-name">Push Power (蹬冰力量)</td>
+            <td class="col-ind-desc">Deep push power on ice and explosive drive from stationary.</td>
+            <td class="col-ind-scores"><div class="score-bubbles" data-step></div></td>
+            <td class="col-ind-notes"></td>
+          </tr>
+          <tr>
+            <td class="col-ind-name">Functional Strength (功能性力量)</td>
+            <td class="col-ind-desc">Supportive strength for holds, pivots, lines and lifts.</td>
+            <td class="col-ind-scores"><div class="score-bubbles" data-step></div></td>
+            <td class="col-ind-notes"></td>
+          </tr>
+          <tr>
+            <td class="col-ind-name">Repetitive Endurance (耐力)</td>
+            <td class="col-ind-desc">Cardiovascular and muscular stamina over full program runs.</td>
+            <td class="col-ind-scores"><div class="score-bubbles" data-step></div></td>
+            <td class="col-ind-notes"></td>
+          </tr>
+          <tr>
+            <td class="col-ind-name">Quality Under Fatigue (抗疲劳质量)</td>
+            <td class="col-ind-desc">Form, knee bend and edge quality preserved in final minutes.</td>
+            <td class="col-ind-scores"><div class="score-bubbles" data-step></div></td>
+            <td class="col-ind-notes"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- CATEGORY 8: Discipline & Coachability -->
+    <div class="category-card">
+      <div class="category-header">
+        <div>
+          <span class="cat-title">8. Discipline & Coachability</span>
+          <span class="cat-title-zh">训练纪律与学习态度</span>
+        </div>
+        <div class="cat-avg-box">Category Mean: [ ______ / 5.0 ] (Observed: ___ / 4)</div>
+      </div>
+      <table class="indicator-table">
+        <tbody>
+          <tr>
+            <td class="col-ind-name">Punctuality (训练准备)</td>
+            <td class="col-ind-desc">Laced up, warmed up and attentive before scheduled ice time.</td>
+            <td class="col-ind-scores"><div class="score-bubbles" data-step></div></td>
+            <td class="col-ind-notes"></td>
+          </tr>
+          <tr>
+            <td class="col-ind-name">Comprehension (理解指令)</td>
+            <td class="col-ind-desc">Focused attention during briefings, demonstrations and board work.</td>
+            <td class="col-ind-scores"><div class="score-bubbles" data-step></div></td>
+            <td class="col-ind-notes"></td>
+          </tr>
+          <tr>
+            <td class="col-ind-name">Correction Application (应用纠正)</td>
+            <td class="col-ind-desc">Immediate, sincere attempt to apply coach's technical corrections.</td>
+            <td class="col-ind-scores"><div class="score-bubbles" data-step></div></td>
+            <td class="col-ind-notes"></td>
+          </tr>
+          <tr>
+            <td class="col-ind-name">Safety & Responsibility (安全责任)</td>
+            <td class="col-ind-desc">Blade safety, respectful team conduct and locker room care.</td>
+            <td class="col-ind-scores"><div class="score-bubbles" data-step></div></td>
+            <td class="col-ind-notes"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Qualitative Feedback -->
+    <div class="feedback-section">
+      <div class="feedback-grid">
+        <div class="fb-col">
+          <div class="fb-title">Key Strengths (优势项)</div>
+          <div class="fb-lines"></div>
+        </div>
+        <div class="fb-col">
+          <div class="fb-title">Next Priority Focus (近期重点)</div>
+          <div class="fb-lines"></div>
+        </div>
+        <div class="fb-col">
+          <div class="fb-title">Next Training Goal (下一阶段目标)</div>
+          <div class="fb-lines"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sign-off Block -->
+    <div class="signoff-section">
+      <div class="signoff-box">
+        <div class="signoff-role">1. Evaluating Coach</div>
+        <div class="signature-line"></div>
+        <div>Coach Name & Signature / Date</div>
+      </div>
+      <div class="signoff-box">
+        <div class="signoff-role">2. Session Lead Coach (Review)</div>
+        <div class="signature-line"></div>
+        <div>Lead Signature / Date</div>
+      </div>
+      <div class="signoff-box">
+        <div class="signoff-role">3. Admin: Coach Cheng Wei</div>
+        <div class="signature-line"></div>
+        <div>Approval & Archival / Date</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const SKATERS = [
+      { no: 1, name: "Gabriella Low", nick: "Gabby", squad: "junior" },
+      { no: 2, name: "Shazila Adina", nick: "Adina", squad: "junior" },
+      { no: 3, name: "Pang Poh Yee", nick: "Poh Yee", squad: "senior" },
+      { no: 4, name: "Nur Damiya", nick: "Damiya", squad: "junior" },
+      { no: 5, name: "Giovanna Low", nick: "Gigi", squad: "junior" },
+      { no: 6, name: "Koh Zhi Ning", nick: "Zhi Ning", squad: "junior" },
+      { no: 7, name: "Melanie Lea", nick: "Melanie", squad: "senior" },
+      { no: 8, name: "Hor Zhi Xuan", nick: "Zhi Xuan", squad: "junior" },
+      { no: 9, name: "Salaree Canning", nick: "Salaree", squad: "senior" },
+      { no: 10, name: "Mila Isabel", nick: "Mila", squad: "junior" },
+      { no: 11, name: "Chan Ming Xing", nick: "Ming Xing", squad: "senior" },
+      { no: 12, name: "Hayley Cece Wong", nick: "Hayley", squad: "junior" },
+      { no: 13, name: "Jenelle Sia", nick: "Jenelle", squad: "junior" },
+      { no: 14, name: "Loh Zi Qi", nick: "Zi Qi", squad: "senior" },
+      { no: 15, name: "Darin Azra", nick: "Darin", squad: "junior" },
+      { no: 16, name: "Apryl Low", nick: "Apryl", squad: "junior" },
+      { no: 17, name: "Isabelle Zara", nick: "Isabelle", squad: "junior" },
+      { no: 18, name: "Olievia Ng", nick: "Olievia", squad: "senior" },
+      { no: 19, name: "Wong Mai", nick: "Mai", squad: "junior" },
+      { no: 20, name: "Ally Chye", nick: "Ally", squad: "senior" },
+      { no: 21, name: "Haruhi", nick: "Haruhi", squad: "development" },
+      { no: 22, name: "Hermione", nick: "Hermione", squad: "junior" },
+      { no: 23, name: "Audrey Afiqah", nick: "Audrey", squad: "junior" },
+      { no: 24, name: "Ng Zhang En", nick: "Zhang En", squad: "senior" },
+      { no: 25, name: "Maria", nick: "Maria", squad: "development" },
+      { no: 26, name: "Farah Deanna", nick: "Farah", squad: "senior" },
+      { no: 27, name: "Daphne Chu", nick: "Daphne", squad: "junior" },
+      { no: 28, name: "Ng Zhang Hui", nick: "Zhang Hui", squad: "senior" },
+      { no: 29, name: "Bridget", nick: "Bridget", squad: "development" },
+      { no: 30, name: "Nur Sabrina", nick: "Sabrina", squad: "senior" },
+      { no: 31, name: "Sow Xyn Er", nick: "Xyn Er", squad: "junior" },
+      { no: 32, name: "Suffiyah Qistina", nick: "Suffiyah", squad: "development" },
+      { no: 33, name: "Phyllis", nick: "Phyllis", squad: "development" },
+      { no: 34, name: "Dayana", nick: "Dayana", squad: "development" },
+      { no: 35, name: "Sow Xyn Chen", nick: "Xyn Chen", squad: "junior" },
+      { no: 36, name: "Lim Shi Xuan", nick: "Shi Xuan", squad: "development" },
+      { no: 37, name: "Sangeeta", nick: "Sangeeta", squad: "junior" },
+      { no: 38, name: "Afrina", nick: "Afrina", squad: "senior" },
+      { no: 39, name: "Nasya Annisa", nick: "Nasya", squad: "junior" },
+      { no: 40, name: "Asha Amilan", nick: "Asha", squad: "senior" }
+    ];
+
+    // Populate Skater Select options
+    const sel = document.getElementById('skaterSelector');
+    SKATERS.forEach(s => {
+      const opt = document.createElement('option');
+      opt.value = s.no;
+      opt.textContent = `${s.no}. ${s.name} (${s.nick}) - ${s.squad.toUpperCase()}`;
+      sel.appendChild(opt);
+    });
+
+    // Populate score bubbles in each row
+    const bubbleContainers = document.querySelectorAll('[data-step]');
+    const steps = ['0', '1', '2', '3', '4', '5'];
+    bubbleContainers.forEach(container => {
+      let html = '';
+      steps.forEach(st => {
+        html += `<span class="bubble">${st}</span>`;
+      });
+      html += `<span class="bubble-no">N/O</span>`;
+      container.innerHTML = html;
+    });
+
+    function updateSkater(no) {
+      if (!no) {
+        document.getElementById('skaterNameDisplay').textContent = "___________________________________";
+        document.getElementById('skaterSquadDisplay').textContent = "[ ] Senior  [ ] Junior  [ ] Dev";
+        document.getElementById('skaterNamePage2').textContent = "____________________";
+        return;
+      }
+      const s = SKATERS.find(x => x.no == no);
+      if (s) {
+        document.getElementById('skaterNameDisplay').textContent = `${s.name} (${s.nick})`;
+        document.getElementById('skaterSquadDisplay').textContent = s.squad.toUpperCase();
+        document.getElementById('skaterNamePage2').textContent = s.name;
+      }
+    }
+
+    // URL parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('skaterName')) {
+      document.getElementById('skaterNameDisplay').textContent = urlParams.get('skaterName');
+      document.getElementById('skaterNamePage2').textContent = urlParams.get('skaterName');
+    }
+    if (urlParams.get('date')) {
+      document.getElementById('dateDisplay').textContent = urlParams.get('date') + " · Asia/Kuala_Lumpur";
+    }
+  </script>
+</body>
+</html>

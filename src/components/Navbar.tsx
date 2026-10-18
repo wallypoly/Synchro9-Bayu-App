@@ -12,7 +12,8 @@ import {
   Calendar,
   Award,
   Layers,
-  ChevronDown
+  ChevronDown,
+  Printer
 } from 'lucide-react';
 
 interface NavbarProps {
@@ -235,6 +236,17 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab, onOpe
               <FileSpreadsheet className="w-3.5 h-3.5" />
               <span>Export CSV</span>
             </button>
+
+            <a
+              href="/print/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-bold text-amber-800 bg-amber-50 border border-amber-200/80 hover:bg-amber-100 transition whitespace-nowrap"
+              title="Open Printable Paper Worksheets (A4 Backup)"
+            >
+              <Printer className="w-3.5 h-3.5 text-amber-700" />
+              <span>Print Worksheets (A4)</span>
+            </a>
           </div>
         </div>
       </nav>

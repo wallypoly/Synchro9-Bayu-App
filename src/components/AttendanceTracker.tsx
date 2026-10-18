@@ -28,7 +28,8 @@ import {
   Download,
   CheckSquare,
   Square,
-  FileText
+  FileText,
+  Printer
 } from 'lucide-react';
 
 interface AttendanceTrackerProps {
@@ -329,6 +330,17 @@ export const AttendanceTracker: React.FC<AttendanceTrackerProps> = ({
               <Download className="w-3.5 h-3.5" />
               <span>Export CSV</span>
             </button>
+
+            <a
+              href={`/print/attendance-sheet.html?sessionId=${session.id}&date=${encodeURIComponent(session.date)}&title=${encodeURIComponent(session.title)}&lead=${encodeURIComponent(session.leadCoachName)}&venue=${encodeURIComponent(session.location)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center space-x-1.5 px-3 py-2 rounded-xl text-xs font-bold text-blue-900 bg-blue-50 border border-blue-200 hover:bg-blue-100 transition"
+              title="Print physical paper attendance roster for ice-side fallback"
+            >
+              <Printer className="w-3.5 h-3.5" />
+              <span>Print Sheet (A4)</span>
+            </a>
 
             {/* Session Lead Submit */}
             {(isLeadCoach || isAdmin) && session.attendanceState === 'draft' && (

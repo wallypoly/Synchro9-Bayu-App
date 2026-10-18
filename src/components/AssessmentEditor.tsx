@@ -37,7 +37,9 @@ import {
   Layers,
   Sparkles,
   Target,
-  ArrowRight
+  ArrowRight,
+  Printer,
+  FileSpreadsheet
 } from 'lucide-react';
 
 interface AssessmentEditorProps {
@@ -295,6 +297,28 @@ export const AssessmentEditor: React.FC<AssessmentEditorProps> = ({
               <Download className="w-3.5 h-3.5" />
               <span>Export CSV</span>
             </button>
+
+            <a
+              href={`/print/assessment-sheet.html?skaterName=${encodeURIComponent(currentSkater?.fullName || '')}&date=${encodeURIComponent(session.date)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center space-x-1.5 px-3 py-2 rounded-xl text-xs font-bold text-emerald-900 bg-emerald-50 border border-emerald-200 hover:bg-emerald-100 transition"
+              title="Print physical 36-metric evaluation sheet (A4 Portrait)"
+            >
+              <Printer className="w-3.5 h-3.5" />
+              <span>Print Rubric (A4)</span>
+            </a>
+
+            <a
+              href="/print/squad-matrix.html"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center space-x-1.5 px-3 py-2 rounded-xl text-xs font-bold text-purple-900 bg-purple-50 border border-purple-200 hover:bg-purple-100 transition"
+              title="Print squad rapid scoring clipboard matrix (A4 Landscape)"
+            >
+              <FileSpreadsheet className="w-3.5 h-3.5" />
+              <span>Print Matrix (A4)</span>
+            </a>
 
             {/* Session Lead Submit */}
             {(isLeadCoach || isAdmin) && session.assessmentState === 'draft' && (
