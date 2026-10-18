@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/bayu-blades-logo-v3.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="theme-color" content="#0a1e3f" />
+    <meta name="description" content="Synchro9 Athlete Portal - Smart Attendance & 36-Metric Assessment System" />
+    <link rel="apple-touch-icon" href="/bayu-blades-logo-v3.png" />
+    <title>Synchro9 Athlete Portal · Bayu Blades</title>
+    <!-- Tailwind CSS CDN for instant athletic styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              brand: {
+                navy: '#0a1e3f',
+                blue: '#1d4ed8',
+                gold: '#d97706'
+              }
+            }
+          }
+        }
+      }
+    </script>
+  </head>
+  <body class="bg-slate-50 text-slate-900 antialiased selection:bg-blue-600 selection:text-white">
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

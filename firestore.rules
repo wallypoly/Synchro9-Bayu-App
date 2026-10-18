@@ -1,0 +1,621 @@
+rules_version = '2';
+
+// ===============================================================
+// Synchro9 Athlete Portal — Production-Grade Security Rules
+// Team: Bayu Blades (Malaysia National Synchro9 Team)
+// Target Project: synchro9-portal-bayu (Spark Free Tier)
+// ===============================================================
+
+// ===============================================================
+// Assumed Data Models & Schemas
+// ===============================================================
+//
+// Collection: users/{userId}
+// Document ID: Firebase Auth UID
+// Fields:
+//   - uid: string (required, immutable, matches auth.uid)
+//   - email: string (required, valid email, <= 100 chars)
+//   - displayName: string (required, 1..100 chars)
+//   - role: string ('admin' | 'coach' | 'athlete' | 'parent')
+//   - status: string ('pending' | 'approved' | 'disabled')
+//   - skaterIds: list of strings (optional, <= 50 items)
+//   - phone: string (optional, <= 30 chars)
+//   - photoURL: string (optional, <= 500 chars)
+//   - createdAt: string (required, immutable, ISO-8601, <= 40 chars)
+//   - updatedAt: string (required, ISO-8601, <= 40 chars)
+//   - approvedBy: string (optional, UID of admin, <= 128 chars)
+//   - approvedAt: string (optional, ISO-8601, <= 40 chars)
+//
+// Collection: skaters/{skaterId}
+// Document ID: skaterId (e.g. skater_1)
+// Fields:
+//   - id: string (required, immutable, matches docId, <= 50 chars)
+//   - fullName: string (required, 1..100 chars)
+//   - nickname: string (optional, <= 50 chars)
+//   - teamNumber: number (optional, integer 0..999)
+//   - squad: string ('junior' | 'senior' | 'development')
+//   - registered: bool (required)
+//   - signedCodeOfConduct: bool (required)
+//   - status: string ('active' | 'inactive')
+//   - parentEmails: list of strings (optional, <= 10 items)
+//   - notes: string (optional, <= 500 chars)
+//
+// Collection: sessions/{sessionId}
+// Document ID: sessionId (e.g. session_20261018_myniss)
+// Fields:
+//   - id: string (required, immutable, matches docId, <= 100 chars)
+//   - title: string (required, 1..200 chars)
+//   - date: string (required, YYYY-MM-DD, 8..12 chars)
+//   - startTime: string (required, HH:mm, 4..8 chars)
+//   - endTime: string (required, HH:mm, 4..8 chars)
+//   - location: string (required, 1..200 chars)
+//   - sessionType: string ('Off-Ice' | 'On-Ice' | 'Combined')
+//   - status: string ('Confirmed' | 'Proposed' | 'Cancelled' | 'Completed')
+//   - leadCoachId: string (required, <= 128 chars)
+//   - leadCoachName: string (required, <= 100 chars)
+//   - coachIds: list of strings (required, <= 20 items)
+//   - coachNames: list of strings (required, <= 20 items)
+//   - participantSkaterIds: list of strings (required, <= 100 items)
+//   - activeSubIndicatorIds: list of strings (optional, <= 50 items)
+//   - checkInWindowMinutes: number (required, 0..180)
+//   - checkInCloseMinutesAfterStart: number (optional, 0..600)
+//   - notes: string (optional, <= 1000 chars)
+//   - attendanceState: string ('draft' | 'submitted' | 'published' | 'revision_requested')
+//   - assessmentState: string ('draft' | 'submitted' | 'published' | 'revision_requested')
+//   - attendanceSubmittedAt: string (optional, <= 40 chars)
+//   - attendanceSubmittedBy: string (optional, <= 128 chars)
+//   - attendancePublishedAt: string (optional, <= 40 chars)
+//   - attendancePublishedBy: string (optional, <= 128 chars)
+//   - assessmentSubmittedAt: string (optional, <= 40 chars)
+//   - assessmentSubmittedBy: string (optional, <= 128 chars)
+//   - assessmentPublishedAt: string (optional, <= 40 chars)
+//   - assessmentPublishedBy: string (optional, <= 128 chars)
+//   - revisionReason: string (optional, <= 500 chars)
+//   - createdAt: string (required, immutable, <= 40 chars)
+//   - updatedAt: string (required, <= 40 chars)
+//
+// Collection: attendance/{attendanceId}
+// Document ID: sessionId_skaterId
+// Fields:
+//   - id: string (required, immutable, matches docId, <= 150 chars)
+//   - sessionId: string (required, immutable, <= 100 chars)
+//   - skaterId: string (required, immutable, <= 50 chars)
+//   - skaterName: string (required, 1..100 chars)
+//   - status: string ('not_marked' | 'checked_in_pending' | 'present' | 'late' | 'absent' | 'excused')
+//   - selfCheckedInAt: string (optional, <= 40 chars)
+//   - selfCheckedInBy: string (optional, <= 128 chars)
+//   - serverCheckInTimestamp: timestamp (optional)
+//   - verifiedBy: string (optional, <= 128 chars)
+//   - verifiedByName: string (optional, <= 100 chars)
+//   - verifiedAt: string (optional, <= 40 chars)
+//   - lateReason: string (optional, <= 300 chars)
+//   - excusedReason: string (optional, <= 300 chars)
+//   - correctionReason: string (optional, <= 300 chars)
+//   - lastModifiedBy: string (optional, <= 128 chars)
+//   - updatedAt: string (required, <= 40 chars)
+//
+// Collection: assessments/{assessmentId}
+// Document ID: sessionId_skaterId
+// Fields:
+//   - id: string (required, immutable, matches docId, <= 150 chars)
+//   - sessionId: string (required, immutable, <= 100 chars)
+//   - skaterId: string (required, immutable, <= 50 chars)
+//   - skaterName: string (required, 1..100 chars)
+//   - templateVersion: string (required, <= 50 chars)
+//   - scores: map (required, <= 50 metric score objects)
+//   - strengths: string (optional, <= 1000 chars)
+//   - nextFocus: string (optional, <= 1000 chars)
+//   - nextTrainingGoal: string (optional, <= 1000 chars)
+//   - coachId: string (required, <= 128 chars)
+//   - coachName: string (required, <= 100 chars)
+//   - createdAt: string (required, immutable, <= 40 chars)
+//   - updatedAt: string (required, <= 40 chars)
+//
+// Collection: audit_logs/{logId}
+// Document ID: logId (auto-generated or unique UUID)
+// Fields:
+//   - id: string (required, immutable, matches docId, <= 150 chars)
+//   - sessionId: string (optional, <= 100 chars)
+//   - action: string (required, 1..100 chars)
+//   - performedBy: string (required, matches auth.uid, <= 128 chars)
+//   - performedByName: string (required, 1..100 chars)
+//   - role: string (required, 1..50 chars)
+//   - details: map (required, <= 50 keys)
+//   - timestamp: string (required, <= 40 chars)
+//
+// Collection: templates/{templateId}
+// Document ID: templateId (e.g. template_v1_0)
+// Fields:
+//   - version: string (required, <= 50 chars)
+//   - name: string (required, 1..200 chars)
+//   - approvalStatus: string ('draft_working' | 'approved_by_admin')
+//   - source: string (optional, <= 500 chars)
+//   - categories: list (required, <= 20 items)
+//   - totalSubIndicators: number (required, 1..100)
+//
+// ===============================================================
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ===============================================================
+    // Root Level Default Deny
+    // ===============================================================
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // ===============================================================
+    // Helper Functions: Authentication & Role Verification
+    // ===============================================================
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    // Official Bootstrap Admin (Coach Cheng Wei)
+    function isBootstrapAdmin() {
+      return isSignedIn() &&
+        request.auth.token.email == 'chiachengwei@gmail.com' &&
+        request.auth.token.email_verified == true;
+    }
+
+    function getUserDoc() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid));
+    }
+
+    function hasUserDoc() {
+      return isSignedIn() && exists(/databases/$(database)/documents/users/$(request.auth.uid));
+    }
+
+    function getUserData() {
+      return getUserDoc().data;
+    }
+
+    // Admin privileges derived from bootstrap email or approved admin record
+    function isAdmin() {
+      return isSignedIn() && (
+        isBootstrapAdmin() ||
+        (hasUserDoc() && getUserData().role == 'admin' && getUserData().status == 'approved')
+      );
+    }
+
+    // Account approval check: pending or disabled users are strictly denied
+    function isApproved() {
+      return isSignedIn() && (
+        isAdmin() ||
+        (hasUserDoc() && getUserData().status == 'approved')
+      );
+    }
+
+    function isCoach() {
+      return isApproved() && (
+        isAdmin() ||
+        (hasUserDoc() && getUserData().role == 'coach')
+      );
+    }
+
+    function isParentOrAthlete() {
+      return isApproved() &&
+        hasUserDoc() &&
+        getUserData().role in ['parent', 'athlete'];
+    }
+
+    // Checks whether a specific skater ID is linked to the current user
+    function isBoundSkater(skaterId) {
+      return isApproved() && (
+        isAdmin() ||
+        (
+          hasUserDoc() &&
+          ('skaterIds' in getUserData()) &&
+          getUserData().skaterIds is list &&
+          skaterId in getUserData().skaterIds
+        )
+      );
+    }
+
+    function getSessionDoc(sessionId) {
+      return get(/databases/$(database)/documents/sessions/$(sessionId));
+    }
+
+    function isSessionAttendancePublished(sessionId) {
+      return exists(/databases/$(database)/documents/sessions/$(sessionId)) &&
+        getSessionDoc(sessionId).data.attendanceState == 'published';
+    }
+
+    function isSessionAssessmentPublished(sessionId) {
+      return exists(/databases/$(database)/documents/sessions/$(sessionId)) &&
+        getSessionDoc(sessionId).data.assessmentState == 'published';
+    }
+
+    function isSessionNotCancelled(sessionId) {
+      return exists(/databases/$(database)/documents/sessions/$(sessionId)) &&
+        getSessionDoc(sessionId).data.status != 'Cancelled';
+    }
+
+    function isValidEmail(email) {
+      return email is string &&
+        email.size() <= 100 &&
+        email.matches('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$');
+    }
+
+    // ===============================================================
+    // Domain Validators (Validator Function Pattern for Create & Update)
+    // ===============================================================
+
+    function isValidUser(data) {
+      return data.keys().hasOnly([
+        'uid', 'email', 'displayName', 'role', 'status',
+        'skaterIds', 'phone', 'photoURL', 'createdAt', 'updatedAt',
+        'approvedBy', 'approvedAt'
+      ]) &&
+      data.keys().hasAll(['uid', 'email', 'displayName', 'role', 'status', 'createdAt', 'updatedAt']) &&
+      data.uid is string && data.uid.size() > 0 && data.uid.size() <= 128 &&
+      data.email is string && isValidEmail(data.email) &&
+      data.displayName is string && data.displayName.size() > 0 && data.displayName.size() <= 100 &&
+      data.role in ['admin', 'coach', 'athlete', 'parent'] &&
+      data.status in ['pending', 'approved', 'disabled'] &&
+      (!('skaterIds' in data) || data.skaterIds == null || (data.skaterIds is list && data.skaterIds.size() <= 50)) &&
+      (!('phone' in data) || data.phone == null || (data.phone is string && data.phone.size() <= 30)) &&
+      (!('photoURL' in data) || data.photoURL == null || (data.photoURL is string && data.photoURL.size() <= 500)) &&
+      data.createdAt is string && data.createdAt.size() <= 40 &&
+      data.updatedAt is string && data.updatedAt.size() <= 40 &&
+      (!('approvedBy' in data) || data.approvedBy == null || (data.approvedBy is string && data.approvedBy.size() <= 128)) &&
+      (!('approvedAt' in data) || data.approvedAt == null || (data.approvedAt is string && data.approvedAt.size() <= 40));
+    }
+
+    function isValidSkater(data) {
+      return data.keys().hasOnly([
+        'id', 'fullName', 'nickname', 'teamNumber', 'squad',
+        'registered', 'signedCodeOfConduct', 'status', 'parentEmails', 'notes'
+      ]) &&
+      data.keys().hasAll(['id', 'fullName', 'squad', 'registered', 'signedCodeOfConduct', 'status']) &&
+      data.id is string && data.id.size() > 0 && data.id.size() <= 50 &&
+      data.fullName is string && data.fullName.size() > 0 && data.fullName.size() <= 100 &&
+      (!('nickname' in data) || data.nickname == null || (data.nickname is string && data.nickname.size() <= 50)) &&
+      (!('teamNumber' in data) || data.teamNumber == null || (data.teamNumber is number && data.teamNumber >= 0 && data.teamNumber <= 999)) &&
+      data.squad in ['junior', 'senior', 'development'] &&
+      data.registered is bool &&
+      data.signedCodeOfConduct is bool &&
+      data.status in ['active', 'inactive'] &&
+      (!('parentEmails' in data) || data.parentEmails == null || (data.parentEmails is list && data.parentEmails.size() <= 10)) &&
+      (!('notes' in data) || data.notes == null || (data.notes is string && data.notes.size() <= 500));
+    }
+
+    function isValidSession(data) {
+      return data.keys().hasOnly([
+        'id', 'title', 'date', 'startTime', 'endTime', 'location',
+        'sessionType', 'status', 'leadCoachId', 'leadCoachName',
+        'coachIds', 'coachNames', 'participantSkaterIds', 'activeSubIndicatorIds',
+        'checkInWindowMinutes', 'checkInCloseMinutesAfterStart', 'notes',
+        'attendanceState', 'assessmentState',
+        'attendanceSubmittedAt', 'attendanceSubmittedBy',
+        'attendancePublishedAt', 'attendancePublishedBy',
+        'assessmentSubmittedAt', 'assessmentSubmittedBy',
+        'assessmentPublishedAt', 'assessmentPublishedBy',
+        'revisionReason', 'createdAt', 'updatedAt'
+      ]) &&
+      data.keys().hasAll([
+        'id', 'title', 'date', 'startTime', 'endTime', 'location',
+        'sessionType', 'status', 'leadCoachId', 'leadCoachName',
+        'coachIds', 'coachNames', 'participantSkaterIds',
+        'checkInWindowMinutes', 'attendanceState', 'assessmentState',
+        'createdAt', 'updatedAt'
+      ]) &&
+      data.id is string && data.id.size() > 0 && data.id.size() <= 100 &&
+      data.title is string && data.title.size() > 0 && data.title.size() <= 200 &&
+      data.date is string && data.date.size() >= 8 && data.date.size() <= 12 &&
+      data.startTime is string && data.startTime.size() >= 4 && data.startTime.size() <= 8 &&
+      data.endTime is string && data.endTime.size() >= 4 && data.endTime.size() <= 8 &&
+      data.location is string && data.location.size() > 0 && data.location.size() <= 200 &&
+      data.sessionType in ['Off-Ice', 'On-Ice', 'Combined'] &&
+      data.status in ['Confirmed', 'Proposed', 'Cancelled', 'Completed'] &&
+      data.leadCoachId is string && data.leadCoachId.size() > 0 && data.leadCoachId.size() <= 128 &&
+      data.leadCoachName is string && data.leadCoachName.size() > 0 && data.leadCoachName.size() <= 100 &&
+      data.coachIds is list && data.coachIds.size() <= 20 &&
+      data.coachNames is list && data.coachNames.size() <= 20 &&
+      data.participantSkaterIds is list && data.participantSkaterIds.size() <= 100 &&
+      (!('activeSubIndicatorIds' in data) || data.activeSubIndicatorIds == null || (data.activeSubIndicatorIds is list && data.activeSubIndicatorIds.size() <= 50)) &&
+      data.checkInWindowMinutes is number && data.checkInWindowMinutes >= 0 && data.checkInWindowMinutes <= 180 &&
+      (!('checkInCloseMinutesAfterStart' in data) || data.checkInCloseMinutesAfterStart == null || (data.checkInCloseMinutesAfterStart is number && data.checkInCloseMinutesAfterStart >= 0 && data.checkInCloseMinutesAfterStart <= 600)) &&
+      (!('notes' in data) || data.notes == null || (data.notes is string && data.notes.size() <= 1000)) &&
+      data.attendanceState in ['draft', 'submitted', 'published', 'revision_requested'] &&
+      data.assessmentState in ['draft', 'submitted', 'published', 'revision_requested'] &&
+      (!('attendanceSubmittedAt' in data) || data.attendanceSubmittedAt == null || (data.attendanceSubmittedAt is string && data.attendanceSubmittedAt.size() <= 40)) &&
+      (!('attendanceSubmittedBy' in data) || data.attendanceSubmittedBy == null || (data.attendanceSubmittedBy is string && data.attendanceSubmittedBy.size() <= 128)) &&
+      (!('attendancePublishedAt' in data) || data.attendancePublishedAt == null || (data.attendancePublishedAt is string && data.attendancePublishedAt.size() <= 40)) &&
+      (!('attendancePublishedBy' in data) || data.attendancePublishedBy == null || (data.attendancePublishedBy is string && data.attendancePublishedBy.size() <= 128)) &&
+      (!('assessmentSubmittedAt' in data) || data.assessmentSubmittedAt == null || (data.assessmentSubmittedAt is string && data.assessmentSubmittedAt.size() <= 40)) &&
+      (!('assessmentSubmittedBy' in data) || data.assessmentSubmittedBy == null || (data.assessmentSubmittedBy is string && data.assessmentSubmittedBy.size() <= 128)) &&
+      (!('assessmentPublishedAt' in data) || data.assessmentPublishedAt == null || (data.assessmentPublishedAt is string && data.assessmentPublishedAt.size() <= 40)) &&
+      (!('assessmentPublishedBy' in data) || data.assessmentPublishedBy == null || (data.assessmentPublishedBy is string && data.assessmentPublishedBy.size() <= 128)) &&
+      (!('revisionReason' in data) || data.revisionReason == null || (data.revisionReason is string && data.revisionReason.size() <= 500)) &&
+      data.createdAt is string && data.createdAt.size() <= 40 &&
+      data.updatedAt is string && data.updatedAt.size() <= 40;
+    }
+
+    function isValidAttendance(data) {
+      return data.keys().hasOnly([
+        'id', 'sessionId', 'skaterId', 'skaterName', 'status',
+        'selfCheckedInAt', 'selfCheckedInBy', 'serverCheckInTimestamp',
+        'verifiedBy', 'verifiedByName', 'verifiedAt',
+        'lateReason', 'excusedReason', 'correctionReason',
+        'lastModifiedBy', 'updatedAt'
+      ]) &&
+      data.keys().hasAll(['id', 'sessionId', 'skaterId', 'skaterName', 'status', 'updatedAt']) &&
+      data.id is string && data.id.size() > 0 && data.id.size() <= 150 &&
+      data.sessionId is string && data.sessionId.size() > 0 && data.sessionId.size() <= 100 &&
+      data.skaterId is string && data.skaterId.size() > 0 && data.skaterId.size() <= 50 &&
+      data.skaterName is string && data.skaterName.size() > 0 && data.skaterName.size() <= 100 &&
+      data.status in ['not_marked', 'checked_in_pending', 'present', 'late', 'absent', 'excused'] &&
+      (!('selfCheckedInAt' in data) || data.selfCheckedInAt == null || (data.selfCheckedInAt is string && data.selfCheckedInAt.size() <= 40)) &&
+      (!('selfCheckedInBy' in data) || data.selfCheckedInBy == null || (data.selfCheckedInBy is string && data.selfCheckedInBy.size() <= 128)) &&
+      (!('serverCheckInTimestamp' in data) || data.serverCheckInTimestamp == null || data.serverCheckInTimestamp is timestamp) &&
+      (!('verifiedBy' in data) || data.verifiedBy == null || (data.verifiedBy is string && data.verifiedBy.size() <= 128)) &&
+      (!('verifiedByName' in data) || data.verifiedByName == null || (data.verifiedByName is string && data.verifiedByName.size() <= 100)) &&
+      (!('verifiedAt' in data) || data.verifiedAt == null || (data.verifiedAt is string && data.verifiedAt.size() <= 40)) &&
+      (!('lateReason' in data) || data.lateReason == null || (data.lateReason is string && data.lateReason.size() <= 300)) &&
+      (!('excusedReason' in data) || data.excusedReason == null || (data.excusedReason is string && data.excusedReason.size() <= 300)) &&
+      (!('correctionReason' in data) || data.correctionReason == null || (data.correctionReason is string && data.correctionReason.size() <= 300)) &&
+      (!('lastModifiedBy' in data) || data.lastModifiedBy == null || (data.lastModifiedBy is string && data.lastModifiedBy.size() <= 128)) &&
+      data.updatedAt is string && data.updatedAt.size() <= 40;
+    }
+
+    function isValidSelfCheckInCreate(data) {
+      return isParentOrAthlete() &&
+        isBoundSkater(data.skaterId) &&
+        data.status == 'checked_in_pending' &&
+        data.selfCheckedInBy == request.auth.uid &&
+        isSessionNotCancelled(data.sessionId) &&
+        (!('verifiedBy' in data) || data.verifiedBy == null) &&
+        (!('verifiedAt' in data) || data.verifiedAt == null) &&
+        (!('verifiedByName' in data) || data.verifiedByName == null);
+    }
+
+    function isValidSelfCheckInUpdate(data) {
+      return isParentOrAthlete() &&
+        isBoundSkater(data.skaterId) &&
+        data.sessionId == resource.data.sessionId &&
+        data.skaterId == resource.data.skaterId &&
+        data.status == 'checked_in_pending' &&
+        data.selfCheckedInBy == request.auth.uid &&
+        isSessionNotCancelled(data.sessionId) &&
+        resource.data.status in ['not_marked', 'checked_in_pending'] &&
+        (!('verifiedBy' in data) || data.verifiedBy == null) &&
+        (!('verifiedAt' in data) || data.verifiedAt == null) &&
+        (!('verifiedByName' in data) || data.verifiedByName == null);
+    }
+
+    function isValidAssessment(data) {
+      return data.keys().hasOnly([
+        'id', 'sessionId', 'skaterId', 'skaterName', 'templateVersion',
+        'scores', 'strengths', 'nextFocus', 'nextTrainingGoal',
+        'coachId', 'coachName', 'createdAt', 'updatedAt'
+      ]) &&
+      data.keys().hasAll([
+        'id', 'sessionId', 'skaterId', 'skaterName', 'templateVersion',
+        'scores', 'coachId', 'coachName', 'createdAt', 'updatedAt'
+      ]) &&
+      data.id is string && data.id.size() > 0 && data.id.size() <= 150 &&
+      data.sessionId is string && data.sessionId.size() > 0 && data.sessionId.size() <= 100 &&
+      data.skaterId is string && data.skaterId.size() > 0 && data.skaterId.size() <= 50 &&
+      data.skaterName is string && data.skaterName.size() > 0 && data.skaterName.size() <= 100 &&
+      data.templateVersion is string && data.templateVersion.size() > 0 && data.templateVersion.size() <= 50 &&
+      data.scores is map && data.scores.size() <= 50 &&
+      (!('strengths' in data) || data.strengths == null || (data.strengths is string && data.strengths.size() <= 1000)) &&
+      (!('nextFocus' in data) || data.nextFocus == null || (data.nextFocus is string && data.nextFocus.size() <= 1000)) &&
+      (!('nextTrainingGoal' in data) || data.nextTrainingGoal == null || (data.nextTrainingGoal is string && data.nextTrainingGoal.size() <= 1000)) &&
+      data.coachId is string && data.coachId.size() > 0 && data.coachId.size() <= 128 &&
+      data.coachName is string && data.coachName.size() > 0 && data.coachName.size() <= 100 &&
+      data.createdAt is string && data.createdAt.size() <= 40 &&
+      data.updatedAt is string && data.updatedAt.size() <= 40;
+    }
+
+    function isValidAuditLog(data) {
+      return data.keys().hasOnly(['id', 'sessionId', 'action', 'performedBy', 'performedByName', 'role', 'details', 'timestamp']) &&
+        data.keys().hasAll(['id', 'action', 'performedBy', 'performedByName', 'role', 'details', 'timestamp']) &&
+        data.id is string && data.id.size() > 0 && data.id.size() <= 150 &&
+        (!('sessionId' in data) || data.sessionId == null || (data.sessionId is string && data.sessionId.size() <= 100)) &&
+        data.action is string && data.action.size() > 0 && data.action.size() <= 100 &&
+        data.performedBy is string && data.performedBy == request.auth.uid &&
+        data.performedByName is string && data.performedByName.size() > 0 && data.performedByName.size() <= 100 &&
+        data.role is string && data.role.size() > 0 && data.role.size() <= 50 &&
+        data.details is map && data.details.size() <= 50 &&
+        data.timestamp is string && data.timestamp.size() <= 40;
+    }
+
+    function isValidTemplate(data) {
+      return data.keys().hasOnly(['version', 'name', 'approvalStatus', 'source', 'categories', 'totalSubIndicators']) &&
+        data.keys().hasAll(['version', 'name', 'approvalStatus', 'categories', 'totalSubIndicators']) &&
+        data.version is string && data.version.size() > 0 && data.version.size() <= 50 &&
+        data.name is string && data.name.size() > 0 && data.name.size() <= 200 &&
+        data.approvalStatus in ['draft_working', 'approved_by_admin'] &&
+        (!('source' in data) || data.source == null || (data.source is string && data.source.size() <= 500)) &&
+        data.categories is list && data.categories.size() <= 20 &&
+        data.totalSubIndicators is number && data.totalSubIndicators >= 1 && data.totalSubIndicators <= 100;
+    }
+
+    // ===============================================================
+    // Collection Rules
+    // ===============================================================
+
+    // ---------------------------------------------------------------
+    // 1. users: Personal Profiles & Role Boundaries (Strict PII Protection)
+    // ---------------------------------------------------------------
+    match /users/{userId} {
+      // Self read or Admin read only. Blanket reads strictly forbidden.
+      allow read: if isSignedIn() && (request.auth.uid == userId || isAdmin());
+
+      // User creates own pending account (athlete/parent), or Admin creates any
+      allow create: if isSignedIn() && isValidUser(request.resource.data) && (
+        isAdmin() || (
+          request.auth.uid == userId &&
+          request.resource.data.uid == userId &&
+          request.resource.data.role in ['athlete', 'parent'] &&
+          request.resource.data.status == 'pending' &&
+          (!('approvedBy' in request.resource.data) || request.resource.data.approvedBy == null) &&
+          (!('approvedAt' in request.resource.data) || request.resource.data.approvedAt == null) &&
+          (!('skaterIds' in request.resource.data) || request.resource.data.skaterIds == null || request.resource.data.skaterIds.size() == 0)
+        )
+      );
+
+      // Admin can update any field. Regular user can only update contact details.
+      allow update: if isSignedIn() && isValidUser(request.resource.data) && (
+        (
+          isAdmin() &&
+          request.resource.data.uid == resource.data.uid &&
+          request.resource.data.createdAt == resource.data.createdAt
+        ) || (
+          request.auth.uid == userId &&
+          request.resource.data.uid == resource.data.uid &&
+          request.resource.data.createdAt == resource.data.createdAt &&
+          request.resource.data.role == resource.data.role &&
+          request.resource.data.status == resource.data.status &&
+          request.resource.data.get('skaterIds', []) == resource.data.get('skaterIds', []) &&
+          request.resource.data.get('approvedBy', null) == resource.data.get('approvedBy', null) &&
+          request.resource.data.get('approvedAt', null) == resource.data.get('approvedAt', null)
+        )
+      );
+
+      allow delete: if isAdmin();
+    }
+
+    // ---------------------------------------------------------------
+    // 2. skaters: Skater Profiles & Squad Rosters
+    // ---------------------------------------------------------------
+    match /skaters/{skaterId} {
+      // Coaches read all; Athletes/Parents read only their linked skaters
+      allow read: if isApproved() && (
+        isCoach() ||
+        isBoundSkater(skaterId)
+      );
+
+      // Coaches and Admins can create and update rosters
+      allow create: if isCoach() && isValidSkater(request.resource.data) && request.resource.data.id == skaterId;
+      allow update: if isCoach() && isValidSkater(request.resource.data) && request.resource.data.id == resource.data.id;
+      allow delete: if isAdmin();
+    }
+
+    // ---------------------------------------------------------------
+    // 3. sessions: Training Sessions & Two-Tier Publishing
+    // ---------------------------------------------------------------
+    match /sessions/{sessionId} {
+      // All approved athletes, parents, and coaches can view scheduled sessions
+      allow read: if isApproved();
+
+      // Only Admin can create sessions
+      allow create: if isAdmin() && isValidSession(request.resource.data) && request.resource.data.id == sessionId;
+
+      // Update: Admin can manage & publish; Lead Coach can submit for review
+      allow update: if isSignedIn() && (
+        // Admin update: can publish submitted sessions, cannot publish direct from draft
+        (
+          isAdmin() &&
+          isValidSession(request.resource.data) &&
+          request.resource.data.id == resource.data.id &&
+          request.resource.data.createdAt == resource.data.createdAt &&
+          (resource.data.attendanceState == 'draft' ? request.resource.data.attendanceState != 'published' : true) &&
+          (resource.data.assessmentState == 'draft' ? request.resource.data.assessmentState != 'published' : true)
+        ) ||
+        // Session Lead Coach update: can submit attendance & assessment (cannot publish)
+        (
+          isCoach() &&
+          resource.data.leadCoachId == request.auth.uid &&
+          isValidSession(request.resource.data) &&
+          request.resource.data.id == resource.data.id &&
+          request.resource.data.leadCoachId == resource.data.leadCoachId &&
+          request.resource.data.createdAt == resource.data.createdAt &&
+          request.resource.data.attendanceState in ['draft', 'submitted', 'revision_requested'] &&
+          request.resource.data.assessmentState in ['draft', 'submitted', 'revision_requested'] &&
+          (resource.data.attendanceState == 'published' ? request.resource.data.attendanceState == 'published' : true) &&
+          (resource.data.assessmentState == 'published' ? request.resource.data.assessmentState == 'published' : true)
+        )
+      );
+
+      allow delete: if isAdmin();
+    }
+
+    // ---------------------------------------------------------------
+    // 4. attendance: Self Check-In & Coach Verification
+    // ---------------------------------------------------------------
+    match /attendance/{attendanceId} {
+      // Coaches read all; Athletes/Parents read only their own PUBLISHED attendance
+      allow read: if isCoach() || (
+        isParentOrAthlete() &&
+        isBoundSkater(resource.data.skaterId) &&
+        isSessionAttendancePublished(resource.data.sessionId)
+      );
+
+      // Create: Coaches mark; Athletes/Parents self check-in pending verification
+      allow create: if isSignedIn() && isValidAttendance(request.resource.data) && request.resource.data.id == attendanceId && (
+        isCoach() ||
+        isValidSelfCheckInCreate(request.resource.data)
+      );
+
+      // Update: Coaches verify/correct; Athletes/Parents update pending check-in
+      allow update: if isSignedIn() && isValidAttendance(request.resource.data) && request.resource.data.id == resource.data.id && (
+        (
+          isCoach() &&
+          request.resource.data.sessionId == resource.data.sessionId &&
+          request.resource.data.skaterId == resource.data.skaterId
+        ) ||
+        isValidSelfCheckInUpdate(request.resource.data)
+      );
+
+      allow delete: if isAdmin();
+    }
+
+    // ---------------------------------------------------------------
+    // 5. assessments: 36-Metric Assessments & Context-Isolated Scores
+    // ---------------------------------------------------------------
+    match /assessments/{assessmentId} {
+      // Coaches read all; Athletes/Parents read only their own PUBLISHED assessment
+      allow read: if isCoach() || (
+        isParentOrAthlete() &&
+        isBoundSkater(resource.data.skaterId) &&
+        isSessionAssessmentPublished(resource.data.sessionId)
+      );
+
+      // Coaches can create draft/updated assessments
+      allow create: if isCoach() && isValidAssessment(request.resource.data) && request.resource.data.id == assessmentId && (
+        isAdmin() ||
+        request.resource.data.coachId == request.auth.uid
+      );
+
+      allow update: if isCoach() && isValidAssessment(request.resource.data) &&
+        request.resource.data.id == resource.data.id &&
+        request.resource.data.sessionId == resource.data.sessionId &&
+        request.resource.data.skaterId == resource.data.skaterId &&
+        request.resource.data.createdAt == resource.data.createdAt;
+
+      allow delete: if isAdmin();
+    }
+
+    // ---------------------------------------------------------------
+    // 6. audit_logs: Immutable Append-Only Audit Trail
+    // ---------------------------------------------------------------
+    match /audit_logs/{logId} {
+      // Admin only audit inspection
+      allow read: if isAdmin();
+
+      // Any authenticated user performing an authorized action appends a verified audit log
+      allow create: if isSignedIn() && isValidAuditLog(request.resource.data) && request.resource.data.id == logId;
+
+      // Strictly append-only: no updates or deletions allowed under any circumstance
+      allow update: if false;
+      allow delete: if false;
+    }
+
+    // ---------------------------------------------------------------
+    // 7. templates: Assessment Metric Templates (36 Sub-indicators)
+    // ---------------------------------------------------------------
+    match /templates/{templateId} {
+      // All approved members can read assessment structure and indicators
+      allow read: if isApproved();
+
+      // Only Admin can configure or modify assessment templates
+      allow create, update: if isAdmin() && isValidTemplate(request.resource.data);
+      allow delete: if isAdmin();
+    }
+  }
+}
