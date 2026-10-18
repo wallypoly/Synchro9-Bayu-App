@@ -391,7 +391,7 @@
       </div>
       <div class="info-item">
         <span class="info-label">Session Lead / Head Coach</span>
-        <span class="info-value" id="valLead">Coach Shazfinas / Coach Cheng Wei</span>
+        <span class="info-value" id="valLead">___________________________</span>
       </div>
     </div>
 
@@ -431,16 +431,16 @@
         <div class="signoff-desc">I confirm that all skaters present on ice have been physically verified.</div>
         <div class="signature-line"></div>
         <div class="signoff-meta">
-          <span>Lead Signature: _________________________</span>
+          <span>Name: ___________________  Signature: ___________________</span>
           <span>Date: _______________</span>
         </div>
       </div>
       <div class="signoff-box">
-        <div class="signoff-role">2. Admin & Publisher: Coach Cheng Wei</div>
-        <div class="signoff-desc">Final verification and archival into the official national synchro database.</div>
+        <div class="signoff-role">2. Team Administrator / Publisher</div>
+        <div class="signoff-desc">Final verification and archival into the official team database.</div>
         <div class="signature-line"></div>
         <div class="signoff-meta">
-          <span>Admin Signature: _________________________</span>
+          <span>Name: ___________________  Signature: ___________________</span>
           <span>Date: _______________</span>
         </div>
       </div>
@@ -500,7 +500,7 @@
       document.getElementById('valDateTime').textContent = d + " · Asia/Kuala_Lumpur";
     }
     if (urlParams.get('venue')) document.getElementById('valLocation').textContent = urlParams.get('venue');
-    if (urlParams.get('lead')) document.getElementById('valLead').textContent = urlParams.get('lead') + " / Coach Cheng Wei";
+    if (urlParams.get('lead')) document.getElementById('valLead').textContent = urlParams.get('lead');
 
     function renderTable(filter) {
       const tbody = document.getElementById('rosterTbody');
